@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:floral/Screens/add_stock.dart';
+import 'package:floral/Screens/messages/chats/screens/chat_page.dart';
+import 'package:floral/Screens/orders/orders.dart';
 import 'package:floral/Screens/product_detail.dart';
+import 'package:floral/Screens/products.dart';
 import 'package:flutter/material.dart';
 
 import '../Utils/colors.dart';
@@ -20,14 +24,6 @@ class Home extends StatelessWidget {
               color: black, fontWeight: FontWeight.w600, fontSize: 16),
         ),
         centerTitle: true,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: black,
-            )),
         actions: [
           IconButton(
               onPressed: () {
@@ -39,16 +35,21 @@ class Home extends StatelessWidget {
                 color: black,
               )),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => ChatPage()));
+              },
               icon: Icon(
                 Icons.message,
                 color: black,
               )),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.shopping_cart_checkout_outlined,
-                color: black,
+          TextButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (builder) => OrdersList()));
+              },
+              child: Text(
+                "ORDERS",
               )),
         ],
       ),
@@ -57,7 +58,6 @@ class Home extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Column(children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
                 height: 50,
@@ -81,46 +81,40 @@ class Home extends StatelessWidget {
             ],
           ),
           SizedBox(
-              height: MediaQuery.of(context).size.height * 0.8,
-              width: double.infinity,
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 50,
-                    crossAxisSpacing: 10),
-                itemCount: 4,
-                itemBuilder: (ctx, i) => InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (builder) => Product_detail()));
-                  },
-                  child: Card(
-                    elevation: 5,
-                    // color: white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Column(
-                      children: [
-                        ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            child: Image.asset(
-                              'asset/Ellie2 1.png',
-                              fit: BoxFit.cover,
-                              height: 120,
-                              width: double.infinity,
-                            )),
-                        Text(
-                          'Causal Dress\nAED 450.00',
-                          style: TextStyle(fontSize: 12, color: black),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ))
+            height: MediaQuery.of(context).size.height * 0.8,
+            width: double.infinity,
+            child: StreamBuilder(
+                stream:
+                    FirebaseFirestore.instance.collection('Order').snapshots(),
+                builder: (context,
+                    AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                        snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 20,
+                          crossAxisSpacing: 5),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (ctx, i) => InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => Product_detail(
+                                          // 1snap: snapshot.data!.docs[i].data(),
+                                          snap1: snapshot.data!.docs[i].data(),
+                                        )));
+                          },
+                          child: Products(
+                            snap: snapshot.data!.docs[i].data(),
+                          )));
+                }),
+          )
         ]),
       )),
     );

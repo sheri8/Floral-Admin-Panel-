@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "786170991657",
+    "project_id": "floral-f3a48",
+    "storage_bucket": "floral-f3a48.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786170991657:android:f0ae6492e8d25c5c39f838",
+        "android_client_info": {
+          "package_name": "com.example.floral"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "786170991657-1c07gh26rbp3i4dhud4880rlr97cb75n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmDAXRJ-LBJEpnZ2mnYzjN9WANSJSD9Fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "786170991657-1c07gh26rbp3i4dhud4880rlr97cb75n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

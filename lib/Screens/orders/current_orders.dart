@@ -1,7 +1,6 @@
-import 'package:floral/Screens/add_stock.dart';
 import 'package:flutter/material.dart';
 
-import '../Utils/colors.dart';
+import '../../Utils/colors.dart';
 
 class CurrentOrders extends StatelessWidget {
   const CurrentOrders({Key? key}) : super(key: key);
@@ -10,47 +9,6 @@ class CurrentOrders extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
-      appBar: AppBar(
-        backgroundColor: white,
-        elevation: 5,
-        title: Text(
-          'Current Orders',
-          style: TextStyle(
-              color: black, fontWeight: FontWeight.w600, fontSize: 16),
-        ),
-        centerTitle: true,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: black,
-            )),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => Add_Stock()));
-              },
-              icon: Icon(
-                Icons.add,
-                color: black,
-              )),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.message,
-                color: black,
-              )),
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.shopping_cart_checkout_outlined,
-                color: black,
-              )),
-        ],
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
