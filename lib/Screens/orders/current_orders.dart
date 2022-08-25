@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/colors.dart';
@@ -41,36 +42,89 @@ class CurrentOrders extends StatelessWidget {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.8,
                 width: double.infinity,
-                child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 50,
-                        crossAxisSpacing: 10),
-                    itemCount: 4,
-                    itemBuilder: (ctx, i) => Card(
-                          elevation: 5,
-                          // color: white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Column(
-                            children: [
-                              ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                  child: Image.asset(
-                                    'asset/Ellie2 1.png',
-                                    fit: BoxFit.cover,
-                                    height: 120,
-                                    width: double.infinity,
-                                  )),
-                              Text(
-                                'Causal Dress\nAED 450.00',
-                                style: TextStyle(fontSize: 12, color: black),
-                              )
-                            ],
-                          ),
-                        )),
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('cart')
+                        .snapshots(),
+                    builder: (context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                            snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      return Container(
+                        height: 160,
+                        width: MediaQuery.of(context).size.width,
+                        child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing: 50,
+                                    crossAxisSpacing: 10),
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (ctx, i) => Card(
+                                  elevation: 5,
+                                  // color: white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      ClipRRect(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15)),
+                                          child: Image.network(
+                                            snapshot.data!.docs[i]['image url'],
+                                            fit: BoxFit.cover,
+                                            height: 120,
+                                            width: double.infinity,
+                                          )),
+                                      //  Image.asset(
+                                      //   'asset/Ellie2 1.png',
+                                      //   fit: BoxFit.cover,
+                                      //   height: 120,
+                                      //   width: double.infinity,
+                                      // )),
+                                      Text(
+                                        '${snapshot.data!.docs[i]['category']}',
+                                        style: TextStyle(
+                                            fontSize: 12, color: black),
+                                      ),
+                                      Text(
+                                        'Item ${snapshot.data!.docs[i]['quantity']}',
+                                        style: TextStyle(
+                                            fontSize: 12, color: black),
+                                      )
+                                    ],
+                                  ),
+                                )),
+                        // ListView.builder(
+                        //     scrollDirection: Axis.horizontal,
+                        //     itemCount: snapshot.data!.docs.length,
+                        //     itemBuilder: (BuildContext context, int index) {
+                        //       return Padding(
+                        //         padding: const EdgeInsets.all(8.0),
+                        //         child: InkWell(
+                        //             onTap: () {
+                        //               Navigator.push(
+                        //                   context,
+                        //                   MaterialPageRoute(
+                        //                       builder: (builder) =>
+                        //                           ProductDescription(
+                        //                             snap: snapshot.data!.docs[index]
+                        //                                 .data(),
+                        //                           )));
+                        //             },
+                        //             child: Image.network(
+                        //               snapshot.data!.docs[index]['Photo Url'],
+                        //               fit: BoxFit.cover,
+                        //             )),
+                        //       );
+                        //     }),
+                      );
+                    }),
               )
             ],
           ),
