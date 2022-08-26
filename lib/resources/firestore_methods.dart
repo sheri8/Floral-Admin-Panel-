@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:floral/model/order.dart';
+import 'package:floral/model/orders_detail.dart';
 import 'package:floral/resources/storage_method.dart';
 import 'package:uuid/uuid.dart';
 
@@ -43,33 +44,33 @@ class FirestoreMethods {
     // return res;
   }
 
-  Future<void> followUser(String uid, String followId) async {
-    try {
-      DocumentSnapshot snap =
-          await _firestore.collection('users').doc(uid).get();
-      List following = (snap.data()! as dynamic)['following'];
+  // Future<void> followUser(String uid, String followId) async {
+  //   try {
+  //     DocumentSnapshot snap =
+  //         await _firestore.collection('users').doc(uid).get();
+  //     List following = (snap.data()! as dynamic)['following'];
 
-      if (following.contains(followId)) {
-        await _firestore.collection('users').doc(followId).update({
-          'followers': FieldValue.arrayRemove([uid])
-        });
+  //     if (following.contains(followId)) {
+  //       await _firestore.collection('users').doc(followId).update({
+  //         'followers': FieldValue.arrayRemove([uid])
+  //       });
 
-        await _firestore.collection('users').doc(uid).update({
-          'following': FieldValue.arrayRemove([followId])
-        });
-      } else {
-        await _firestore.collection('users').doc(followId).update({
-          'followers': FieldValue.arrayUnion([uid])
-        });
+  //       await _firestore.collection('users').doc(uid).update({
+  //         'following': FieldValue.arrayRemove([followId])
+  //       });
+  //     } else {
+  //       await _firestore.collection('users').doc(followId).update({
+  //         'followers': FieldValue.arrayUnion([uid])
+  //       });
 
-        await _firestore.collection('users').doc(uid).update({
-          'following': FieldValue.arrayUnion([followId])
-        });
-      }
-    } catch (e) {
-      print(e.toString());
-    }
-  }
+  //       await _firestore.collection('users').doc(uid).update({
+  //         'following': FieldValue.arrayUnion([followId])
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
 
   Future<String> saveData({
     required String Name,
@@ -100,6 +101,37 @@ class FirestoreMethods {
       res = 'success';
     } on FirebaseAuthException catch (e) {
       res = e.message.toString();
+    }
+    return res;
+  }
+
+  Future<String> delivery({
+    required String category,
+    required String image,
+    required String quantity,
+  }) async {
+    String res = "Some error occured";
+    var uuid = Uuid().v1();
+
+    try {
+      String photUrl = image;
+      // await StorageMethods().uploadImageToStorage('Snap', !, true);
+      String postId = const Uuid().v1();
+      OrdersDetail Order =
+          OrdersDetail(Quantity: quantity, Category: category, PhotoUrl: image);
+      // Cart cart = Cart(
+      //     Date: date,
+      //     Category: category,
+      //     ImageUrl: photUrl,
+      //     quantity: quantity);
+
+      await _firestore
+          .collection('orders_detail')
+          .doc(uuid)
+          .set(Order.toJson());
+      res = "success";
+    } on FirebaseAuthException catch (err) {
+      res = err.toString();
     }
     return res;
   }

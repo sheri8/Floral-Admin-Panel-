@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:floral/Screens/product_detail_orders.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/colors.dart';
@@ -64,40 +65,52 @@ class CurrentOrders extends StatelessWidget {
                                     mainAxisSpacing: 50,
                                     crossAxisSpacing: 10),
                             itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (ctx, i) => Card(
-                                  elevation: 5,
-                                  // color: white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      ClipRRect(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15)),
-                                          child: Image.network(
-                                            snapshot.data!.docs[i]['image url'],
-                                            fit: BoxFit.cover,
-                                            height: 120,
-                                            width: double.infinity,
-                                          )),
-                                      //  Image.asset(
-                                      //   'asset/Ellie2 1.png',
-                                      //   fit: BoxFit.cover,
-                                      //   height: 120,
-                                      //   width: double.infinity,
-                                      // )),
-                                      Text(
-                                        '${snapshot.data!.docs[i]['category']}',
-                                        style: TextStyle(
-                                            fontSize: 12, color: black),
-                                      ),
-                                      Text(
-                                        'Item ${snapshot.data!.docs[i]['quantity']}',
-                                        style: TextStyle(
-                                            fontSize: 12, color: black),
-                                      )
-                                    ],
+                            itemBuilder: (ctx, i) => InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (builder) =>
+                                                ProductDetailOrders(
+                                                    snap2: snapshot
+                                                        .data!.docs[i]
+                                                        .data())));
+                                  },
+                                  child: Card(
+                                    elevation: 5,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
+                                            child: Image.network(
+                                              snapshot.data!.docs[i]
+                                                  ['image url'],
+                                              fit: BoxFit.cover,
+                                              height: 120,
+                                              width: double.infinity,
+                                            )),
+                                        //  Image.asset(
+                                        //   'asset/Ellie2 1.png',
+                                        //   fit: BoxFit.cover,
+                                        //   height: 120,
+                                        //   width: double.infinity,
+                                        // )),
+                                        Text(
+                                          '${snapshot.data!.docs[i]['category']}',
+                                          style: TextStyle(
+                                              fontSize: 12, color: black),
+                                        ),
+                                        Text(
+                                          'Item ${snapshot.data!.docs[i]['quantity']}',
+                                          style: TextStyle(
+                                              fontSize: 12, color: black),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 )),
                         // ListView.builder(
