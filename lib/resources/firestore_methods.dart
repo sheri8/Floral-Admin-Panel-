@@ -105,6 +105,22 @@ class FirestoreMethods {
     return res;
   }
 
+  Future<String> orderComplete({
+    required uuid,
+  }) async {
+    String res = 'Some error occured.';
+    try {
+      if (uuid.isNotEmpty) {
+        _firestore.collection('cart').doc(uuid).update({'order': 'complete'});
+        print(uuid);
+        res = 'Success';
+      }
+    } catch (error) {
+      res = error.toString();
+    }
+    return res;
+  }
+
   Future<String> delivery({
     required String category,
     required String image,
@@ -117,17 +133,16 @@ class FirestoreMethods {
       String photUrl = image;
       // await StorageMethods().uploadImageToStorage('Snap', !, true);
       String postId = const Uuid().v1();
-      OrdersDetail Order =
-          OrdersDetail(Quantity: quantity, Category: category, PhotoUrl: image);
-      // Cart cart = Cart(
-      //     Date: date,
-      //     Category: category,
-      //     ImageUrl: photUrl,
-      //     quantity: quantity);
+      OrdersDetail Order = OrdersDetail(
+          Quantity: quantity,
+          Category: category,
+          PhotoUrl: image,
+          checked: false);
 
       await _firestore
           .collection('orders_detail')
           .doc(uuid)
+          // .update({'order': 'complete'});
           .set(Order.toJson());
       res = "success";
     } on FirebaseAuthException catch (err) {

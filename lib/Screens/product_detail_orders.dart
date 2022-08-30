@@ -70,58 +70,6 @@ class _ProductDetailOrdersState extends State<ProductDetailOrders> {
                     fontWeight: FontWeight.w800,
                     color: Colors.white),
               ),
-              //         SizedBox(
-              //           height: 30,
-              //         ),
-              //         Text(
-              //           'Product Name: ${widget.snap2['Name']}',
-              //           style: TextStyle(
-              //               color: Colors.black,
-              //               fontWeight: FontWeight.bold,
-              //               fontSize: 15),
-              //         ),
-              //         SizedBox(
-              //           height: 10,
-              //         ),
-              //         Text(
-              //           'Retail Price: ${widget.snap2['Price']}',
-              //           style: TextStyle(
-              //               color: Colors.black,
-              //               fontWeight: FontWeight.bold,
-              //               fontSize: 15),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              // Card(
-              //   elevation: 5,
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(10.0),
-              //     child: Column(
-              //       crossAxisAlignment: CrossAxisAlignment.stretch,
-              //       children: [
-              //         Text(
-              //           'Description',
-              //           style: TextStyle(
-              //               color: Colors.black,
-              //               fontWeight: FontWeight.bold,
-              //               fontSize: 15),
-              //         ),
-              //         SizedBox(
-              //           height: 30,
-              //         ),
-              //         Text(
-              //           widget.snap2['Description'],
-              //           style: TextStyle(
-              //               color: Colors.black,
-              //               fontWeight: FontWeight.bold,
-              //               fontSize: 15),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
               Center(
                 child: Container(
                   height: 50,
@@ -136,14 +84,6 @@ class _ProductDetailOrdersState extends State<ProductDetailOrders> {
                             category: widget.snap2['category'],
                             image: widget.snap2['image url'],
                             quantity: widget.snap2['date']);
-                        //  FirestoreMethods().saveData(
-                        //     Name: name.text,
-                        //     Type: type.text,
-                        //     Color: color.text,
-                        //     Description: description.text,
-                        //     Category: dropdownValue,
-                        //     Price: price.text,
-                        //     image: _image);
                         if (result == 'success') {
                           debugPrint(result);
                           Navigator.pop(context);

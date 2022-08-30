@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:floral/Screens/product_detail_orders.dart';
+import 'package:floral/resources/firestore_methods.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/colors.dart';
@@ -41,11 +42,12 @@ class CurrentOrders extends StatelessWidget {
                 ],
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.8,
+                height: MediaQuery.of(context).size.height * 0.9,
                 width: double.infinity,
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('cart')
+                        .where('order', isEqualTo: 'pending')
                         .snapshots(),
                     builder: (context,
                         AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
@@ -56,63 +58,78 @@ class CurrentOrders extends StatelessWidget {
                         );
                       }
                       return Container(
-                        height: 160,
+                        height: 180,
                         width: MediaQuery.of(context).size.width,
                         child: GridView.builder(
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
-                                    mainAxisSpacing: 50,
+                                    mainAxisSpacing: 20,
                                     crossAxisSpacing: 10),
                             itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (ctx, i) => InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (builder) =>
-                                                ProductDetailOrders(
-                                                    snap2: snapshot
-                                                        .data!.docs[i]
-                                                        .data())));
-                                  },
-                                  child: Card(
-                                    elevation: 5,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        ClipRRect(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(15)),
-                                            child: Image.network(
-                                              snapshot.data!.docs[i]
-                                                  ['image url'],
-                                              fit: BoxFit.cover,
-                                              height: 120,
-                                              width: double.infinity,
-                                            )),
-                                        //  Image.asset(
-                                        //   'asset/Ellie2 1.png',
-                                        //   fit: BoxFit.cover,
-                                        //   height: 120,
-                                        //   width: double.infinity,
-                                        // )),
-                                        Text(
-                                          '${snapshot.data!.docs[i]['category']}',
-                                          style: TextStyle(
-                                              fontSize: 12, color: black),
-                                        ),
-                                        Text(
+                            itemBuilder: (ctx, i) {
+                              Map<String, dynamic> snap = snapshot.data!.docs[i]
+                                  .data() as Map<String, dynamic>;
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (builder) =>
+                                              ProductDetailOrders(
+                                                  snap2: snapshot.data!.docs[i]
+                                                      .data())));
+                                },
+                                child: Card(
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      ClipRRect(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15)),
+                                          child: Image.network(
+                                            snapshot.data!.docs[i]['image url'],
+                                            fit: BoxFit.cover,
+                                            height: 95,
+                                            width: double.infinity,
+                                          )),
+                                      // SizedBox(height: 10),
+                                      //  Image.asset(
+                                      //   'asset/Ellie2 1.png',
+                                      //   fit: BoxFit.cover,
+                                      //   height: 120,
+                                      //   width: double.infinity,
+                                      // )),
+                                      Text(
+                                        '${snapshot.data!.docs[i]['category']}',
+                                        style: TextStyle(
+                                            fontSize: 12, color: black),
+                                      ),
+                                      ListTile(
+                                        title: Text(
                                           'Item ${snapshot.data!.docs[i]['quantity']}',
                                           style: TextStyle(
                                               fontSize: 12, color: black),
-                                        )
-                                      ],
-                                    ),
+                                        ),
+                                        trailing: IconButton(
+                                            onPressed: () async {
+                                              await FirestoreMethods()
+                                                  .orderComplete(
+                                                      uuid: snap['uuid']);
+                                              print('Order posted');
+                                            },
+                                            icon: Icon(Icons.check)),
+                                      )
+                                    ],
                                   ),
-                                )),
+                                ),
+                              );
+                            }),
                         // ListView.builder(
                         //     scrollDirection: Axis.horizontal,
                         //     itemCount: snapshot.data!.docs.length,
